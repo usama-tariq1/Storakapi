@@ -1,0 +1,1 @@
+Your Verification Code is <strong> {{$otp}} </strong>
