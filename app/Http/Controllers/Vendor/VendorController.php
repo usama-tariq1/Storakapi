@@ -5,12 +5,64 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
 {
+
+
+    use ApiResponser;
+
+    // login
+    public static function login(Request $request){
+        $attr = $request->validate([
+            'email' => 'required|string|email|',
+            'password' => 'required|string|min:6'
+        ]);
+
+        if (!Auth::attempt($attr)) {
+            return self::error('Credentials not match', 401);
+        }
+
+
+        // dd(Auth::user());
+        $user = User::where('id' , Auth::user()->id)->with('Role')->first();
+
+
+        if($user->status == 0){
+            return response()->json(
+                [
+                    "code" => 403,
+                    "message" => "Account is Disabled",
+                    
+                ]
+            );
+
+        }
+
+
+        if($user->role_id != 3){
+            return response()->json([
+                "code" => 403,
+                "message" => "Can Not Access This Information"
+            ]);
+        }
+        
+
+
+
+
+        return self::success([
+            
+            'token' => auth()->user()->createToken('API Token')->plainTextToken,
+            'user' => $user
+        ]);
+
+
+    }
     
     public function register(Request $request){
         return AuthController::register($request , 3);

@@ -135,6 +135,12 @@ class AuthController extends Controller
         }
 
 
+        if(auth()->user()->role_id != 4){
+            return response()->json([
+                "code" => 403,
+                "message" => "Can Not Access This Information"
+            ]);
+        }
         
 
 
@@ -142,7 +148,8 @@ class AuthController extends Controller
 
         return self::success([
             
-            'token' => auth()->user()->createToken('API Token')->plainTextToken
+            'token' => auth()->user()->createToken('API Token')->plainTextToken,
+            'user' => Auth::user('id' , auth()->user()->id)->with('Role')->first()
         ]);
 
 
