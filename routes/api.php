@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController ;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\SubCategoryController;
+use App\Http\Controllers\Store\StoreController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Vendor\VendorController;
 use Illuminate\Http\Request;
@@ -156,4 +157,24 @@ Route::group([ 'prefix' => "/subcategories"], function () {
     Route::get('/', [SubCategoryController::class, 'index']);
     // Single Category
     Route::get('/{id}', [SubCategoryController::class, 'show']);
+});
+
+
+
+// Sub Categories
+Route::group([ 'prefix' => "/store"], function () {
+    // All store
+    Route::get('/all', [StoreController::class, 'index']);
+    // My Store
+    Route::get('/my', [StoreController::class, 'mystore'])->middleware(['auth:sanctum']);
+    // Single store
+    Route::get('/{id}', [StoreController::class, 'show']);
+
+
+    // Add Store With one Active limit only 
+    Route::patch('/{id}', [StoreController::class, 'update'])->middleware(['auth:sanctum']);
+
+     // Add Store With one Active limit only 
+     Route::post('/create', [StoreController::class, 'store'])->middleware(['auth:sanctum']);
+    
 });

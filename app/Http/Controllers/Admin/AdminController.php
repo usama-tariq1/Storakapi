@@ -65,8 +65,9 @@ class AdminController extends Controller
         $user = User::where('id' , Auth::user()->id)->with('Role')->first();
         // dd($user);
         return response()->json($user);
+    
     }
-
+        
     // update Profile
     public function updateProfile(Request $request){
 
